@@ -885,7 +885,7 @@ void processStructureFunctions(JNIEnv* env, jclass type) {
   jobject libAnn =
       env->CallObjectMethod(type, gGetAnnotationMethod, gLibraryClass);
   if (!env->IsSameObject(libAnn, NULL)) {
-    jobject libName = env->CallObjectMethod(libAnn, gGetLibraryMethod);
+    jobject libName = env->CallObjectMethod(libAnn, gGetLibraryMethod, nullptr);
     env->DeleteLocalRef(libAnn);
     jstring libPath = (jstring)env->CallStaticObjectMethod(
         gNatJClass, gLookUpLibraryStaticMethod, libName, false);
@@ -957,7 +957,7 @@ void processStructureFunctions(JNIEnv* env, jclass type) {
       if (env->IsSameObject(var, NULL)) {
         info->variadic = kNotVariadic;
       } else {
-        info->variadic = env->CallByteMethod(var, gGetVariadicUnboxPolicyMethod);
+        info->variadic = env->CallByteMethod(var, gGetVariadicUnboxPolicyMethod, nullptr);
         if (info->variadic == gRuntimeVariadicPolicyValue) {
           info->variadic = gDefaultUnboxPolicy;
         } else if (info->variadic == gUnboxVariadicPolicyValue) {
@@ -1014,7 +1014,7 @@ void processStructureFunctions(JNIEnv* env, jclass type) {
 
       // Get method name
       jstring methodName =
-          (jstring)env->CallObjectMethod(fieldAnn, gGetCFunctionNameMethod);
+          (jstring)env->CallObjectMethod(fieldAnn, gGetCFunctionNameMethod, nullptr);
       if (env->GetStringUTFLength(methodName) == 0) {
         methodName =
             (jstring)env->CallObjectMethod(method, gGetMethodNameMethod);
@@ -1145,11 +1145,11 @@ void processStructureFunctions(JNIEnv* env, jclass type) {
 
       // Store whether it is a getter
       info->isGetter =
-          env->CallBooleanMethod(fieldAnn, gGetCVariableIsGetterMethod);
+          env->CallBooleanMethod(fieldAnn, gGetCVariableIsGetterMethod, nullptr);
 
       // Store the pointer of the variable
       jstring variableName =
-          (jstring)env->CallObjectMethod(fieldAnn, gGetCVariableNameMethod);
+          (jstring)env->CallObjectMethod(fieldAnn, gGetCVariableNameMethod, nullptr);
       if (env->GetStringUTFLength(variableName) == 0) {
         variableName =
             (jstring)env->CallObjectMethod(method, gGetMethodNameMethod);
